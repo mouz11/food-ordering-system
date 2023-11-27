@@ -2,16 +2,16 @@ package com.food.ordering.system.restaurant.service.dataaccess.mapper;
 
 import com.food.ordering.system.dataaccess.restaurant.entity.RestaurantEntity;
 import com.food.ordering.system.dataaccess.restaurant.exception.RestaurantDataAccessException;
-import com.food.ordering.system.domain.valueobject.Money;
-import com.food.ordering.system.domain.valueobject.OrderId;
-import com.food.ordering.system.domain.valueobject.ProductId;
-import com.food.ordering.system.domain.valueobject.RestaurantId;
-import com.food.ordering.system.restaurant.service.dataaccess.restaurant.entity.OrderApprovalEntity;
+import com.food.ordering.system.domain.valueObject.Money;
+import com.food.ordering.system.domain.valueObject.OrderId;
+import com.food.ordering.system.domain.valueObject.ProductId;
+import com.food.ordering.system.domain.valueObject.RestaurantId;
+import com.food.ordering.system.restaurant.service.dataaccess.entity.OrderApprovalEntity;
 import com.food.ordering.system.restaurant.service.domain.entity.OrderApproval;
-import com.food.ordering.system.restaurant.service.domain.entity.OrderDetail;
+import com.food.ordering.system.restaurant.service.domain.entity.OrderDetails;
 import com.food.ordering.system.restaurant.service.domain.entity.Product;
 import com.food.ordering.system.restaurant.service.domain.entity.Restaurant;
-import com.food.ordering.system.restaurant.service.domain.valueobject.OrderApprovalId;
+import com.food.ordering.system.restaurant.service.domain.valueObject.OrderApprovalId;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class RestaurantDataAccessMapper {
 
     public List<UUID> restaurantToRestaurantProducts(Restaurant restaurant) {
-        return restaurant.getOrderDetail().getProducts().stream()
+        return restaurant.getOrderDetails().getProducts().stream()
                 .map(product -> product.getId().getValue())
                 .collect(Collectors.toList());
     }
@@ -37,13 +37,13 @@ public class RestaurantDataAccessMapper {
                                 .productId(new ProductId(entity.getProductId()))
                                 .name(entity.getProductName())
                                 .price(new Money(entity.getProductPrice()))
-                                .available(entity.getProductAvailable())
+                                .available(entity.isProductAvailable())
                                 .build())
                 .collect(Collectors.toList());
 
         return Restaurant.builder()
                 .restaurantId(new RestaurantId(restaurantEntity.getRestaurantId()))
-                .orderDetail(OrderDetail.builder()
+                .orderDetails(OrderDetails.builder()
                         .products(restaurantProducts)
                         .build())
                 .active(restaurantEntity.getRestaurantActive())
@@ -55,7 +55,7 @@ public class RestaurantDataAccessMapper {
                 .id(orderApproval.getId().getValue())
                 .restaurantId(orderApproval.getRestaurantId().getValue())
                 .orderId(orderApproval.getOrderId().getValue())
-                .status(orderApproval.getApprovalStatus())
+                .status(orderApproval.getOrderApprovalStatus())
                 .build();
     }
 
@@ -64,7 +64,7 @@ public class RestaurantDataAccessMapper {
                 .orderApprovalId(new OrderApprovalId(orderApprovalEntity.getId()))
                 .restaurantId(new RestaurantId(orderApprovalEntity.getRestaurantId()))
                 .orderId(new OrderId(orderApprovalEntity.getOrderId()))
-                .approvalStatus(orderApprovalEntity.getStatus())
+                .orderApprovalStatus(orderApprovalEntity.getStatus())
                 .build();
     }
 

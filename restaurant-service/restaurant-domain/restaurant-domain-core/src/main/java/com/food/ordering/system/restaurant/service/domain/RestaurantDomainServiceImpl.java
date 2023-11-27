@@ -17,7 +17,7 @@ public class RestaurantDomainServiceImpl implements RestaurantDomainService{
     public OrderApprovalEvent validateOrder(Restaurant restaurant,
                                             List<String> failureMessages) {
         restaurant.validateOrder(failureMessages);
-        log.info("validating order  withid", restaurant.getOrderDetails().getId().getValue());
+        log.info("validating order  with id", restaurant.getOrderDetails().getId().getValue());
         if (failureMessages.isEmpty()) {
             log.info("order is approved for id: {}", restaurant.getOrderDetails().getId().getValue());
             restaurant.constructOrderApproval(OrderApprovalStatus.APPROVED);

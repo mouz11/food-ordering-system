@@ -1,6 +1,8 @@
 package com.food.ordering.system.order.service.messaging.listener.kafka;
 
 import com.food.ordering.system.kafka.consumer.KafkaConsumer;
+import com.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
+import com.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
 import com.food.ordering.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import com.food.ordering.system.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalMessageListener;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,7 @@ public class RestaurantApprovalResponseKafkaListener implements KafkaConsumer<Re
             } else if (OrderApprovalStatus.REJECTED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
                 log.info("Processing rejected order for order id: {}, with failure messages: {}",
                         restaurantApprovalResponseAvroModel.getOrderId(),
-                        String.join("-", restaurantApprovalResponseAvroModel.getFailureMessage()));
+                        String.join("-", restaurantApprovalResponseAvroModel.getFailureMessages()));
                 restaurantApprovalMessageListener.orderRejected(orderMessagingDataMapper
                         .approvalResponseAvroModelToApprovalResponse(restaurantApprovalResponseAvroModel));
             }
