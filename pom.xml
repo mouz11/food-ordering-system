@@ -20,7 +20,6 @@
         <module>order-service</module>
         <module>common</module>
         <module>infrastructure</module>
-        <module>infrastructure/kafka</module>
         <module>customer-service</module>
         <module>payment-service</module>
         <module>restaurant-service</module>
@@ -146,6 +145,11 @@
             <dependency>
                 <groupId>com.mouz</groupId>
                 <artifactId>restaurant-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>common-dataaccess</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
