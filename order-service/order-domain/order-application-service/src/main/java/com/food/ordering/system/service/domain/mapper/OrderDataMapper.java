@@ -7,6 +7,7 @@ import com.food.ordering.system.domain.valueObject.RestaurantId;
 import com.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
 import com.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
 import com.food.ordering.system.service.domain.dto.create.OrderAddress;
+import com.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
 import com.food.ordering.system.service.domain.entity.Order;
 import com.food.ordering.system.service.domain.entity.OrderItem;
 import com.food.ordering.system.service.domain.entity.Product;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderDataMapper {
-    public Restaurant CreateOrderCommandToRestaurant(CreateOrderCommand createOrderCommand) {
+    public Restaurant createOrderCommandToRestaurant(CreateOrderCommand createOrderCommand) {
         return Restaurant.builder()
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
                 .products(createOrderCommand.getItems().stream().map(orderItem ->
@@ -43,7 +44,7 @@ public class OrderDataMapper {
                         .product(new Product(new ProductId(orderItem.getProductId())))
                         .price(new Money(orderItem.getPrice()))
                         .quantity(orderItem.getQuantity())
-                        .subTotal(new Money(orderItem.getSuTotal()))
+                        .subTotal(new Money(orderItem.getSubTotal()))
                         .build()).collect(Collectors.toList());
     }
 
@@ -53,10 +54,18 @@ public class OrderDataMapper {
                 orderAddress.getPostalCode(),
                 orderAddress.getCity());
     }
-    public CreateOrderResponse orderToCreateOrderResponse(Order order) {
+    public CreateOrderResponse orderToCreateOrderResponse(Order order, String message) {
         return CreateOrderResponse.builder()
                 .orderTrackingId(order.getTrackingId().getValue())
                 .orderStatus(order.getOrderStatus())
+                .message(message)
+                .build();
+    }
+    public TrackOrderResponse orderToTrackOrderResponse(Order order) {
+        return TrackOrderResponse.builder()
+                .orderTrackingId(order.getTrackingId().getValue())
+                .orderStatus(order.getOrderStatus())
+                .failureMessages(order.getFailureMessages())
                 .build();
     }
 }

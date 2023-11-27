@@ -23,10 +23,10 @@ public class Money {
         return this.amount != null && this.amount.compareTo(money.getAmount()) > 0;
     }
     public Money add(Money money) {
-        return new Money(setScale(this.amount.add(getAmount())));
+        return new Money(setScale(this.amount.add(money.getAmount())));
     }
     public Money subtract(Money money) {
-        return new Money(setScale(this.amount.subtract(getAmount())));
+        return new Money(setScale(this.amount.subtract(money.getAmount())));
     }
     public Money multiply(Integer multiplayer) {
         return new Money(setScale(this.amount.multiply(new BigDecimal(multiplayer))));

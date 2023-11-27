@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class OrderCreateHelper {
         return orderCreatedEvent;
     }
     private Restaurant checkRestaurant(CreateOrderCommand createOrderCommand) {
-        Restaurant restaurant = orderDataMapper.CreateOrderCommandToRestaurant(createOrderCommand);
+        Restaurant restaurant = orderDataMapper.createOrderCommandToRestaurant(createOrderCommand);
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findRestaurantInformation(restaurant);
         if (optionalRestaurant.isEmpty()) {
             log.warn("Could not find Restaurant with id : " + restaurant.getId());
@@ -67,11 +68,11 @@ public class OrderCreateHelper {
     }
     private Order saveOrder(Order order) {
         Order savedOrder = orderRepository.save(order);
-        if (savedOrder == null) {
-            log.error("Could Not Saved The Order!");
+        if (Objects.isNull(savedOrder)) {
+            log.error("Could Not Save The Order!");
             throw new OrderDomainException("Could Not Save The Order!");
         }
         log.info("order is saved with id {}", savedOrder.getId().getValue());
-        return order;
+        return savedOrder;
     }
 }

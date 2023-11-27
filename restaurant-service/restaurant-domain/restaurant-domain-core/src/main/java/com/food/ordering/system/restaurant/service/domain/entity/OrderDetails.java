@@ -1,0 +1,71 @@
+package com.food.ordering.system.restaurant.service.domain.entity;
+
+import com.food.ordering.system.domain.entity.BaseEntity;
+import com.food.ordering.system.domain.valueObject.Money;
+import com.food.ordering.system.domain.valueObject.OrderId;
+import com.food.ordering.system.domain.valueObject.OrderStatus;
+
+import java.util.List;
+
+public class OrderDetails extends BaseEntity<OrderId> {
+    private OrderStatus orderStatus;
+    private Money totalPrice;
+    private final List<Product> products;
+
+    private OrderDetails(Builder builder) {
+        setId(builder.orderId);
+        orderStatus = builder.orderStatus;
+        totalPrice = builder.totalPrice;
+        products = builder.products;
+    }
+
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public Money getTotalPrice() {
+        return totalPrice;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+    public static final class Builder {
+        private OrderId orderId;
+        private OrderStatus orderStatus;
+        private Money totalPrice;
+        private List<Product> products;
+
+        private Builder() {
+        }
+
+        public Builder orderId(OrderId val) {
+            orderId = val;
+            return this;
+        }
+
+        public Builder orderStatus(OrderStatus val) {
+            orderStatus = val;
+            return this;
+        }
+
+        public Builder totalPrice(Money val) {
+            totalPrice = val;
+            return this;
+        }
+
+        public Builder products(List<Product> val) {
+            products = val;
+            return this;
+        }
+
+        public OrderDetails build() {
+            return new OrderDetails(this);
+        }
+    }
+}
