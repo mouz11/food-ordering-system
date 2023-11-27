@@ -37,6 +37,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>saga</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.mouz</groupId>
                 <artifactId>order-domain-core</artifactId>
                 <version>${project.version}</version>
