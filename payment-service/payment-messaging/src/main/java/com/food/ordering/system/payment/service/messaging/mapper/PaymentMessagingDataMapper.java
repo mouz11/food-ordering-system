@@ -21,7 +21,7 @@ public class PaymentMessagingDataMapper {
                 .setSagaId("")
                 .setPaymentId(paymentCompletedEvent.getPayment().getId().getValue().toString())
                 .setCustomerId(paymentCompletedEvent.getPayment().getCustomerId().getValue().toString())
-                .setOrderId(paymentCompletedEvent.getPayment().getId().getValue().toString())
+                .setOrderId(paymentCompletedEvent.getPayment().getOrderId().getValue().toString())
                 .setPrice(paymentCompletedEvent.getPayment().getPrice().getAmount())
                 .setCreatedAt(paymentCompletedEvent.getPayment().getCreatedAt().toInstant())
                 .setPaymentStatus(PaymentStatus.valueOf(paymentCompletedEvent.getPayment().getPaymentStatus().name()))

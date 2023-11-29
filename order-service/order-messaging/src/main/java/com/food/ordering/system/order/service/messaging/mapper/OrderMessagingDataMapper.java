@@ -59,11 +59,11 @@ public class OrderMessagingDataMapper {
     }
     public PaymentResponse  paymentResponseAvroModelToPaymentResponse(PaymentResponseAvroModel paymentResponseAvroModel) {
         return PaymentResponse.builder()
-                .id(UUID.fromString(paymentResponseAvroModel.getId()))
-                .sagaId(UUID.fromString(paymentResponseAvroModel.getSagaId()))
-                .paymentId(UUID.fromString(paymentResponseAvroModel.getPaymentId()))
-                .customerId(UUID.fromString(paymentResponseAvroModel.getCustomerId()))
-                .orderId(UUID.fromString(paymentResponseAvroModel.getOrderId()))
+                .id(paymentResponseAvroModel.getId())
+                .sagaId(paymentResponseAvroModel.getSagaId())
+                .paymentId(paymentResponseAvroModel.getPaymentId())
+                .customerId(paymentResponseAvroModel.getCustomerId())
+                .orderId(paymentResponseAvroModel.getOrderId())
                 .price(paymentResponseAvroModel.getPrice())
                 .createdAt(paymentResponseAvroModel.getCreatedAt().toEpochMilli())
                 .paymentStatus(PaymentStatus.valueOf(paymentResponseAvroModel.getPaymentStatus().name()))

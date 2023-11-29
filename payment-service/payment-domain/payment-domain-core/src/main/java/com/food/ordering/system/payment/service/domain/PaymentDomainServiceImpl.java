@@ -30,7 +30,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService{
         payment.initializePayment();
         validateCreditEntry(payment, creditEntry, failureMessages);
         subtractCreditEntity(payment, creditEntry);
-        updateCreditHistory(payment, creditHistories, TransactionType.CREDIT);
+        updateCreditHistory(payment, creditHistories, TransactionType.DEBIT);
         validateCreditHistory(creditHistories, creditEntry, failureMessages);
         if (failureMessages.isEmpty()) {
             log.info("payment is initiated for id:{}", payment.getOrderId().getValue());
@@ -51,7 +51,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService{
                                                  List<String> failureMessages) {
         payment.validatePayment(failureMessages);
         addDebitEntry(payment, creditEntry);
-        updateCreditHistory(payment, creditHistories, TransactionType.DEBIT);
+        updateCreditHistory(payment, creditHistories, TransactionType.CREDIT);
         if (failureMessages.isEmpty()) {
             log.info("Payment is canceled for order id: {}",
                     payment.getOrderId().getValue());
@@ -74,6 +74,8 @@ public class PaymentDomainServiceImpl implements PaymentDomainService{
         }
     }
     private void subtractCreditEntity(Payment payment, CreditEntry creditEntry) {
+        Money money = payment.getPrice();
+        Money credit = creditEntry.getTotalCreditAmount();
         creditEntry.subtractCreditAmount(payment.getPrice());
     }
     private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories, TransactionType transactionType) {
@@ -86,17 +88,22 @@ public class PaymentDomainServiceImpl implements PaymentDomainService{
     }
     private void validateCreditHistory(List<CreditHistory> creditHistories, CreditEntry creditEntry, List<String> failureMessages) {
         Money totalCreditHistory = getTotalHistoryAmount(creditHistories, TransactionType.CREDIT);
+        log.error("total credit history : {}", totalCreditHistory.getAmount());
         Money totalDebitHistory = getTotalHistoryAmount(creditHistories, TransactionType.DEBIT);
-        if (totalCreditHistory.isGreaterThan(totalDebitHistory)) {
+        log.error("total debit history : {}", totalDebitHistory.getAmount());
+
+        if (totalDebitHistory.isGreaterThan(totalCreditHistory)) {
             log.error("Customer with id:{} doesn't have enough credit according to the credit history",
                     creditEntry.getCustomerId().getValue());
             failureMessages.add("Customer with id="
                     + creditEntry.getCustomerId().getValue()
                     +"doesn't have enough credit according to the credit history!");
         }
-        if (!totalDebitHistory.subtract(totalCreditHistory).equals(creditEntry.getTotalCreditAmount())) {
-            log.error("Credit history total is not equal to current credit for customer id: {}",
-                    creditEntry.getCustomerId().getValue());
+        if (!totalCreditHistory.subtract(totalDebitHistory).equals(creditEntry.getTotalCreditAmount())) {
+            log.error("Credit history total is not equal to current credit for customer id: {} total history {} and credit amount: {}",
+                    creditEntry.getCustomerId().getValue(),
+                    totalCreditHistory.subtract(totalDebitHistory).getAmount(),
+                    creditEntry.getTotalCreditAmount().getAmount());
             failureMessages.add("Credit history total is not equal to current credit for customer id="
                     + creditEntry.getCustomerId().getValue()
                    + "!");

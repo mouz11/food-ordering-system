@@ -31,7 +31,7 @@ public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse, E
     @Transactional
     public EmptyEvent process(RestaurantApprovalResponse restaurantApprovalResponse) {
         log.info("approving order with id: {}", restaurantApprovalResponse.getOrderId());
-        Order order = orderSagaHelper.findOrder(UUID.fromString(restaurantApprovalResponse.getOrderId()));
+        Order order = orderSagaHelper.findOrder(restaurantApprovalResponse.getOrderId());
         orderDomainService.approveOrder(order);
         orderSagaHelper.saveOrder(order);
         log.info("Order with id: {} is approved", order.getId().getValue());
@@ -42,7 +42,7 @@ public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse, E
     @Transactional
     public OrderCanceledEvent rollback(RestaurantApprovalResponse restaurantApprovalResponse) {
         log.info("Canceling order with id: {}", restaurantApprovalResponse.getOrderId());
-        Order order = orderSagaHelper.findOrder(UUID.fromString(restaurantApprovalResponse.getOrderId()));
+        Order order = orderSagaHelper.findOrder(restaurantApprovalResponse.getOrderId());
         OrderCanceledEvent orderCanceledEvent = orderDomainService.cancelOrderPayment(order, restaurantApprovalResponse.getFailureMessages());
         orderSagaHelper.saveOrder(order);
         log.info("Order Canceling with id: {}", order.getId().getValue());

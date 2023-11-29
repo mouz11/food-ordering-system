@@ -81,7 +81,7 @@ public class PaymentRequestHelper {
         Optional<CreditEntry> optionalCreditEntry = creditEntryRepository.findByCustomerId(customerId);
         if (optionalCreditEntry.isEmpty()) {
             log.error("Credit Entry with customer id:{} doesn't exist", customerId);
-            throw new PaymentApplicationServiceException("Could not found credit entry with id: " + customerId);
+            throw new PaymentApplicationServiceException("Could not found credit entry with customer id: " + customerId.getValue().toString());
         }
         return optionalCreditEntry.get();
     }
