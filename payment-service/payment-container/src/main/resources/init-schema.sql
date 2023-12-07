@@ -45,9 +45,11 @@ CREATE TABLE "payment".credit_history
     type transaction_type NOT NULL,
     CONSTRAINT credit_history_pkey PRIMARY KEY (id)
 );
+
+DROP TYPE IF EXISTS outbox_status;
+CREATE TYPE outbox_status AS ENUM ('STARTED', 'COMPLETED', 'FAILED');
+
 DROP TABLE IF EXISTS "payment".order_outbox CASCADE;
-
-
 CREATE TABLE "payment".order_outbox
 (
     id uuid NOT NULL,

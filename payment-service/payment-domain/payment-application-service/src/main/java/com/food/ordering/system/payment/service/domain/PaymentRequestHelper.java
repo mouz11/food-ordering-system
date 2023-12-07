@@ -9,6 +9,7 @@ import com.food.ordering.system.payment.service.domain.entity.CreditHistory;
 import com.food.ordering.system.payment.service.domain.entity.Payment;
 import com.food.ordering.system.payment.service.domain.event.PaymentEvent;
 import com.food.ordering.system.payment.service.domain.exception.PaymentApplicationServiceException;
+import com.food.ordering.system.payment.service.domain.exception.PaymentNotFoundException;
 import com.food.ordering.system.payment.service.domain.mapper.PaymentDataMapper;
 import com.food.ordering.system.payment.service.domain.outbox.model.OrderOutboxMessage;
 import com.food.ordering.system.payment.service.domain.outbox.scheduler.OrderOutboxHelper;
@@ -86,7 +87,7 @@ public class PaymentRequestHelper {
                 .findByOrderId(UUID.fromString(paymentRequest.getOrderId()));
         if (optionalPayment.isEmpty()) {
             log.error("Could not find payment for order id:{}", paymentRequest.getOrderId());
-            throw new PaymentApplicationServiceException("Could not find payment for order id: " + paymentRequest.getOrderId());
+            throw new PaymentNotFoundException("Could not find payment for order id: " + paymentRequest.getOrderId());
         }
         Payment payment = optionalPayment.get();
         CreditEntry creditEntry = getCreditEntry(payment.getCustomerId());
