@@ -1,6 +1,8 @@
 package com.food.ordering.system.service.domain;
 
 import com.food.ordering.system.domain.valueObject.OrderId;
+import com.food.ordering.system.domain.valueObject.OrderStatus;
+import com.food.ordering.system.saga.SagaStatus;
 import com.food.ordering.system.service.domain.entity.Order;
 import com.food.ordering.system.service.domain.exception.OrderNotFoundException;
 import com.food.ordering.system.service.domain.ports.output.repository.OrderRepository;
@@ -30,5 +32,19 @@ public class OrderSagaHelper {
     }
     void saveOrder(Order order) {
         orderRepository.save(order);
+    }
+    SagaStatus orderStatusToSgaStatus(OrderStatus orderStatus) {
+        switch (orderStatus) {
+            case PAID:
+                return SagaStatus.PROCESSING;
+            case APPROVED:
+                return SagaStatus.SUCCEEDED;
+            case CANCELLING:
+                return SagaStatus.COMPENSATING;
+            case CANCELED:
+                return SagaStatus.COMPENSATED;
+            default:
+                return SagaStatus.STARTED;
+        }
     }
 }

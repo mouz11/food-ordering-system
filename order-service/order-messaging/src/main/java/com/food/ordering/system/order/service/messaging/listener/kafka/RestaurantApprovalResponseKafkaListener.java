@@ -4,8 +4,10 @@ import com.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
 import com.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
 import com.food.ordering.system.order.service.messaging.mapper.OrderMessagingDataMapper;
+import com.food.ordering.system.service.domain.exception.OrderNotFoundException;
 import com.food.ordering.system.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalMessageListener;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -39,17 +41,27 @@ public class RestaurantApprovalResponseKafkaListener implements KafkaConsumer<Re
                 offsets.toString());
 
         messages.forEach(restaurantApprovalResponseAvroModel -> {
-            if (OrderApprovalStatus.APPROVED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
-                log.info("Processing approved order for order id: {}",
+            try {
+                if (OrderApprovalStatus.APPROVED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
+                    log.info("Processing approved order for order id: {}",
+                            restaurantApprovalResponseAvroModel.getOrderId());
+                    restaurantApprovalMessageListener.orderApproved(orderMessagingDataMapper.approvalResponseAvroModelToApprovalResponse(restaurantApprovalResponseAvroModel));
+
+                } else if (OrderApprovalStatus.REJECTED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
+                    log.info("Processing rejected order for order id: {}, with failure messages: {}",
+                            restaurantApprovalResponseAvroModel.getOrderId(),
+                            String.join("-", restaurantApprovalResponseAvroModel.getFailureMessages()));
+                    restaurantApprovalMessageListener.orderRejected(orderMessagingDataMapper
+                            .approvalResponseAvroModelToApprovalResponse(restaurantApprovalResponseAvroModel));
+                }
+            } catch (OptimisticLockingFailureException e) {
+                //NO OP for optimistic locking.
+                log.error("Caught optimistic locking exception in RestaurantApprovalResponseKafkaListener for order id: {}",
                         restaurantApprovalResponseAvroModel.getOrderId());
-                restaurantApprovalMessageListener.orderApproved(orderMessagingDataMapper.approvalResponseAvroModelToApprovalResponse(restaurantApprovalResponseAvroModel));
-                
-            } else if (OrderApprovalStatus.REJECTED == restaurantApprovalResponseAvroModel.getOrderApprovalStatus()) {
-                log.info("Processing rejected order for order id: {}, with failure messages: {}",
-                        restaurantApprovalResponseAvroModel.getOrderId(),
-                        String.join("-", restaurantApprovalResponseAvroModel.getFailureMessages()));
-                restaurantApprovalMessageListener.orderRejected(orderMessagingDataMapper
-                        .approvalResponseAvroModelToApprovalResponse(restaurantApprovalResponseAvroModel));
+            } catch (OrderNotFoundException e) {
+                //NO OP for optimistic locking.
+                log.error("No Order found Exception for order id: {}",
+                        restaurantApprovalResponseAvroModel.getOrderId());
             }
         });
 
