@@ -67,7 +67,7 @@ public class OrderDataMapper {
     public OrderPaymentEventPayload orderCreatedEventToOrderPaymentEventPayload(OrderCreatedEvent orderCreatedEvent) {
         return OrderPaymentEventPayload.builder()
                 .customerId(orderCreatedEvent.getOrder().getCustomerId().getValue().toString())
-                .orderId(orderCreatedEvent.getOrder().getId().toString())
+                .orderId(orderCreatedEvent.getOrder().getId().getValue().toString())
                 .price(orderCreatedEvent.getOrder().getPrice().getAmount())
                 .createdAt(orderCreatedEvent.getCreatedAt())
                 .paymentOrderStatus(PaymentOrderStatus.PENDING.name())
@@ -75,7 +75,7 @@ public class OrderDataMapper {
     }
     public OrderApprovalEventPayload orderPaidEventToOrderApprovalEventPayload(OrderPaidEvent orderPaidEvent) {
         return OrderApprovalEventPayload.builder()
-                .orderId(orderPaidEvent.getOrder().getId().toString())
+                .orderId(orderPaidEvent.getOrder().getId().getValue().toString())
                 .restaurantId(orderPaidEvent.getOrder().getRestaurantId().getValue().toString())
                 .restaurantOrderStatus(RestaurantOrderStatus.PAID.name())
                 .products(orderPaidEvent.getOrder().getItems().stream()
@@ -90,7 +90,7 @@ public class OrderDataMapper {
     public OrderPaymentEventPayload orderCancelledEventToOrderPaymentEventPayload(OrderCanceledEvent orderCanceledEvent) {
         return OrderPaymentEventPayload.builder()
                 .customerId(orderCanceledEvent.getOrder().getCustomerId().getValue().toString())
-                .orderId(orderCanceledEvent.getOrder().getId().toString())
+                .orderId(orderCanceledEvent.getOrder().getId().getValue().toString())
                 .price(orderCanceledEvent.getOrder().getPrice().getAmount())
                 .createdAt(orderCanceledEvent.getCreatedAt())
                 .paymentOrderStatus(PaymentOrderStatus.CANCELED.name())

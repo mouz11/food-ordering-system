@@ -9,7 +9,6 @@ import com.food.ordering.system.payment.service.domain.outbox.model.OrderEventPa
 import com.food.ordering.system.payment.service.domain.outbox.model.OrderOutboxMessage;
 import com.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentResponseMessagePublisher;
 import com.food.ordering.system.payment.service.messaging.mapper.PaymentMessagingDataMapper;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +60,7 @@ public class PaymentEventKafkaPublisher implements PaymentResponseMessagePublish
                     paymentResponseAvroModel.getOrderId(), sagaId);
         } catch (Exception e) {
             log.error("Error sending PaymentResponseAvroModel message" +
-                    " to kafka with order id: {} and saga is: {}, error: {}",
+                    " to kafka with order id: {} and saga id: {}, error: {}",
                     orderEventPayload.getOrderId(), sagaId, e.getMessage());
         }
     }

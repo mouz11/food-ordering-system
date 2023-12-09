@@ -87,7 +87,7 @@ public class PaymentRequestMessageListener {
             }
         }
     }
-    
+
     private void assertOrderOutbox(String sagaId) {
         Optional<OrderOutboxEntity> orderOutboxEntity =
                 orderOutboxRepository.findByTypeAndSagaIdAndPaymentStatusAndOutboxStatus(ORDER_SAGA_NAME,

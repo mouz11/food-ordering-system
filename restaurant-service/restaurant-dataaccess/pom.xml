@@ -29,6 +29,14 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>outbox</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mouz</groupId>
+            <artifactId>restaurant-application-service</artifactId>
+        </dependency>
     </dependencies>
 
 
