@@ -9,7 +9,7 @@ import com.food.ordering.system.restaurant.service.domain.exception.RestaurantNo
 import com.food.ordering.system.restaurant.service.domain.mapper.RestaurantDataMapper;
 import com.food.ordering.system.restaurant.service.domain.outbox.model.OrderOutboxMessage;
 import com.food.ordering.system.restaurant.service.domain.outbox.scheduler.OrderOutboxHelper;
-import com.food.ordering.system.restaurant.service.domain.ports.output.message.publisher.RestaurantApprovalResponseMessagePublisher;
+import com.food.ordering.system.restaurant.service.domain.ports.output.message.publisher.ApprovalResponseMessagePublisher;
 import com.food.ordering.system.restaurant.service.domain.ports.output.repository.OrderApprovalRepository;
 import com.food.ordering.system.restaurant.service.domain.ports.output.repository.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class RestaurantApprovalRequestHelper {
     private final RestaurantRepository restaurantRepository;
     private final OrderApprovalRepository orderApprovalRepository;
     private final OrderOutboxHelper orderOutboxHelper;
-    private final RestaurantApprovalResponseMessagePublisher restaurantApprovalResponseMessagePublisher;
+    private final ApprovalResponseMessagePublisher restaurantApprovalResponseMessagePublisher;
 
 
 
@@ -39,7 +39,7 @@ public class RestaurantApprovalRequestHelper {
                                            RestaurantRepository restaurantRepository,
                                            OrderApprovalRepository orderApprovalRepository,
                                            OrderOutboxHelper orderOutboxHelper,
-                                           RestaurantApprovalResponseMessagePublisher
+                                           ApprovalResponseMessagePublisher
                                                    restaurantApprovalResponseMessagePublisher) {
         this.restaurantDomainService = restaurantDomainService;
         this.restaurantDataMapper = restaurantDataMapper;
