@@ -140,7 +140,7 @@ public class OrderApplicationServiceTest {
                                 .build()))
                 .build();
 
-        Customer customer = new Customer();
+        Customer customer = new Customer(new CustomerId(CUSTOMER_ID));
         customer.setId(new CustomerId(UUID.randomUUID()));
         Restaurant restaurant = Restaurant.builder()
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))

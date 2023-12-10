@@ -4,11 +4,9 @@ import com.food.ordering.system.domain.valueObject.*;
 import com.food.ordering.system.service.domain.dto.create.CreateOrderCommand;
 import com.food.ordering.system.service.domain.dto.create.CreateOrderResponse;
 import com.food.ordering.system.service.domain.dto.create.OrderAddress;
+import com.food.ordering.system.service.domain.dto.message.CustomerModel;
 import com.food.ordering.system.service.domain.dto.track.TrackOrderResponse;
-import com.food.ordering.system.service.domain.entity.Order;
-import com.food.ordering.system.service.domain.entity.OrderItem;
-import com.food.ordering.system.service.domain.entity.Product;
-import com.food.ordering.system.service.domain.entity.Restaurant;
+import com.food.ordering.system.service.domain.entity.*;
 import com.food.ordering.system.service.domain.event.OrderCanceledEvent;
 import com.food.ordering.system.service.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.service.domain.event.OrderPaidEvent;
@@ -102,5 +100,11 @@ public class OrderDataMapper {
                 .orderStatus(order.getOrderStatus())
                 .failureMessages(order.getFailureMessages())
                 .build();
+    }
+    public Customer customerModelToCustomer(CustomerModel customerModel) {
+        return new Customer(new CustomerId(UUID.fromString(customerModel.getId())),
+                customerModel.getUsername(),
+                customerModel.getFirstname(),
+                customerModel.getLastname());
     }
 }

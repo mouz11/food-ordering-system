@@ -108,3 +108,15 @@ CREATE TABLE "order".restaurant_approval_outbox
 CREATE INDEX "restaurant_approval_outbox_saga_status"
     ON "order".restaurant_approval_outbox
         (type, outbox_status, saga_status);
+
+
+DROP TABLE IF EXISTS "order".customers CASCADE;
+
+CREATE TABLE "order".customers
+(
+    id uuid NOT NULL,
+    username character varying COLLATE pg_catalog."default" NOT NULL,
+    firstname character varying COLLATE pg_catalog."default" NOT NULL,
+    lastname character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT customers_pkey PRIMARY KEY (id)
+);

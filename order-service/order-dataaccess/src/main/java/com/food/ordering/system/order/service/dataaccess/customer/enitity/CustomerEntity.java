@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Table(name = "order_customer_m_view", schema = "customer")
+@Table(name = "customers")
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,4 +19,7 @@ import java.util.UUID;
 public class CustomerEntity {
     @Id
     private UUID id;
+    private String username;
+    private String firstname;
+    private String lastname;
 }
